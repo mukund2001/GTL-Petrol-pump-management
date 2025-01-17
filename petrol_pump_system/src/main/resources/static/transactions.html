@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Transactions - GTL Petrol Pump</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to bottom, #f7f9fc, #e9ecef);
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #1d3557;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+        }
+
+        .navbar-brand {
+            font-size: 28px;
+            font-weight: bold;
+            color: #f1faee;
+        }
+
+        .navbar-nav .nav-link {
+            color: #f1faee;
+            margin-left: 15px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #a8dadc;
+        }
+
+        .table-container {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 40px;
+            margin-top: 80px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: bold;
+            color: #1d3557;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .table-container table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            text-align: center;
+        }
+
+        .table-container th {
+            background-color: #457b9d;
+            color: #fff;
+        }
+
+        .table-container td {
+            font-size: 16px;
+            padding: 10px;
+        }
+
+        footer {
+            background: #1d3557;
+            color: #f1faee;
+            text-align: center;
+            padding: 10px 0;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">GTL Petrol Pump</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact.html">Contact Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/login.html">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Table Container -->
+    <div class="table-container">
+        <h1>All Transactions</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>User ID</th>
+                    <th>Payment Method</th>
+                    <th>Amount</th>
+                    <th>Nozzle ID</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody id="transactions-table">
+                <!-- Transactions will be loaded here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 GTL Petrol Pump | All Rights Reserved</p>
+    </footer>
+
+    <!-- Fetch and populate transactions -->
+    <script>
+        // Fetch all transactions and populate the table
+        fetch('/transactions', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('authToken') // Add token for authenticated access
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('transactions-table');
+            data.forEach(transaction => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${transaction.id}</td>
+                    <td>${transaction.userId}</td>
+                    <td>${transaction.paymentMethod}</td>
+                    <td>${transaction.amount}</td>
+                    <td>${transaction.nozzleId}</td>
+                    <td>${new Date(transaction.createdAt).toLocaleString()}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching transactions:', error);
+            alert('Error loading transactions.');
+        });
+    </script>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
